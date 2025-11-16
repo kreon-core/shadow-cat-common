@@ -29,7 +29,7 @@ format:
 	gofumpt -l -w -extra .
 	goimports -w .
 	gci write \
-		--custom-order -s standard -s default -s "prefix(project-name)" -s blank \
+		--custom-order -s standard -s default -s "prefix(github.com/kreon-core/shadow-cat-common)" -s blank \
 		--no-lex-order --skip-generated --skip-vendor .
 	golines -w -m 120 .
 
