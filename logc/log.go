@@ -65,10 +65,10 @@ func enableDevelopmentLogging(outWriter, errWriter *io.Writer) {
 		return fmt.Sprintf("%s", i)
 	}
 	fmtFieldNameFunc := func(i any) string {
-		return fmt.Sprintf("%s:", i)
+		return fmt.Sprintf("%s: ", i)
 	}
 	fmtFieldValueFunc := func(i any) string {
-		return strings.ToUpper(fmt.Sprintf("%s", i))
+		return fmt.Sprintf("%s", i)
 	}
 
 	*outWriter = zerolog.ConsoleWriter{
