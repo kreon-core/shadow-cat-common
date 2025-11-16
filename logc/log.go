@@ -17,6 +17,12 @@ var (
 )
 
 func InitializeLogger() {
+	dev := flag.Bool("dev", false, "enable console logs for development")
+	trace := flag.Bool("trace", false, "sets log level to trace")
+	debug := flag.Bool("debug", false, "sets log level to debug")
+
+	flag.Parse()
+
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	zerolog.CallerSkipFrameCount = 3
 	zerolog.CallerMarshalFunc = func(_ uintptr, file string, line int) string {
@@ -32,11 +38,6 @@ func InitializeLogger() {
 		return fmt.Sprintf("%s:%d", file, line)
 	}
 
-	trace := flag.Bool("trace", false, "sets log level to trace")
-	debug := flag.Bool("debug", false, "sets log level to debug")
-
-	flag.Parse()
-
 	switch {
 	case *trace:
 		zerolog.SetGlobalLevel(zerolog.TraceLevel)
@@ -48,7 +49,6 @@ func InitializeLogger() {
 
 	outWriter, errWriter := io.Writer(os.Stdout), io.Writer(os.Stderr)
 
-	dev := flag.Bool("dev", false, "enable console logs for development")
 	if *dev {
 		enableDevelopmentLogging(&outWriter, &errWriter)
 	}
