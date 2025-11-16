@@ -19,7 +19,7 @@ var (
 
 func InitializeLogger() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	zerolog.CallerSkipFrameCount = 2
+	zerolog.CallerSkipFrameCount = 3
 	zerolog.CallerMarshalFunc = func(_ uintptr, file string, line int) string {
 		return file + ":" + strconv.Itoa(line)
 	}
