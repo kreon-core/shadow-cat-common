@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -21,7 +20,16 @@ func InitializeLogger() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	zerolog.CallerSkipFrameCount = 3
 	zerolog.CallerMarshalFunc = func(_ uintptr, file string, line int) string {
-		return file + ":" + strconv.Itoa(line)
+		idx := strings.LastIndex(file, "/")
+		if idx == -1 {
+			idx = strings.LastIndex(file, "\\")
+		}
+
+		if idx != -1 {
+			file = file[idx+1:]
+		}
+
+		return fmt.Sprintf("%s:%d", file, line)
 	}
 
 	trace := flag.Bool("trace", false, "sets log level to trace")

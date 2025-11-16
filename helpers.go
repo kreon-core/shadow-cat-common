@@ -52,6 +52,7 @@ func IsBlank(s string) bool {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -75,7 +76,7 @@ func ZeroOf(obj any) any {
 	return reflect.Zero(reflect.TypeOf(obj)).Interface()
 }
 
-func OrElse[T any](obj T, defaultVal T) T {
+func OrElse[T any](obj, defaultVal T) T {
 	if IsEmpty(obj) {
 		return defaultVal
 	}
