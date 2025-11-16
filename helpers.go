@@ -74,3 +74,11 @@ func ZeroOf(obj any) any {
 
 	return reflect.Zero(reflect.TypeOf(obj)).Interface()
 }
+
+func OrElse(obj any, defaultVal any) any {
+	if IsEmpty(obj) {
+		return defaultVal
+	}
+
+	return obj
+}
