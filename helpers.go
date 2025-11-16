@@ -75,7 +75,7 @@ func ZeroOf(obj any) any {
 	return reflect.Zero(reflect.TypeOf(obj)).Interface()
 }
 
-func OrElse(obj any, defaultVal any) any {
+func OrElse[T any](obj T, defaultVal T) T {
 	if IsEmpty(obj) {
 		return defaultVal
 	}
