@@ -3,6 +3,7 @@ package tul
 import (
 	"reflect"
 	"slices"
+	"unicode"
 )
 
 var numericZeros = []any{ //nolint:gochecknoglobals // common utility
@@ -43,6 +44,15 @@ func IsEmpty(obj any) bool {
 	}
 
 	return false
+}
+
+func IsBlank(s string) bool {
+	for _, c := range s {
+		if !unicode.IsSpace(c) {
+			return false
+		}
+	}
+	return true
 }
 
 func IsZero(obj any) bool {
