@@ -62,7 +62,7 @@ func enableDevelopmentLogging(outWriter, errWriter *io.Writer) {
 		return strings.ToUpper(fmt.Sprintf("| %-5s|", i))
 	}
 	fmtMessageFunc := func(i any) string {
-		return fmt.Sprintf("***%s***", i)
+		return fmt.Sprintf("%s", i)
 	}
 	fmtFieldNameFunc := func(i any) string {
 		return fmt.Sprintf("%s:", i)
