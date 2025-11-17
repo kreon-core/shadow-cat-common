@@ -24,7 +24,7 @@ func InitializeLogger() {
 	flag.Parse()
 
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	zerolog.CallerSkipFrameCount = 3
+	zerolog.CallerSkipFrameCount = 2
 	zerolog.CallerMarshalFunc = func(_ uintptr, file string, line int) string {
 		idx := strings.LastIndex(file, "/")
 		if idx == -1 {
