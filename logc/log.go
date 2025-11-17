@@ -65,7 +65,7 @@ func enableDevelopmentLogging(outWriter, errWriter *io.Writer) {
 		return fmt.Sprintf("%s", i)
 	}
 	fmtFieldNameFunc := func(i any) string {
-		return fmt.Sprintf("%s: ", i)
+		return fmt.Sprintf("%s=", i)
 	}
 	fmtFieldValueFunc := func(i any) string {
 		return fmt.Sprintf("%s", i)
@@ -91,93 +91,47 @@ func enableDevelopmentLogging(outWriter, errWriter *io.Writer) {
 	}
 }
 
-// Helper to add fields to zerolog Event.
-
-func addFields(e *zerolog.Event, fields ...any) *zerolog.Event {
-	i, n := 0, len(fields)
-	for i < n {
-		key, ok := fields[i].(string)
-		if ok {
-			if i+1 < n {
-				e = addKeyValueField(e, key, fields[i+1])
-				i += 2
-
-				continue
-			}
-		} else {
-			switch v := fields[i].(type) {
-			case error:
-				e.Err(v)
-			default:
-				e.Any("field", v)
-			}
-		}
-
-		i++
-	}
-
-	return e
+//nolint:zerologlint // returning zerolog Event for chaining
+func OutLog() *zerolog.Event {
+	return outLogger.Log()
 }
 
-func addKeyValueField(e *zerolog.Event, key string, value any) *zerolog.Event {
-	switch v := value.(type) {
-	case string:
-		e.Str(key, v)
-	case []string:
-		e.Strs(key, v)
-	case int:
-		e.Int(key, v)
-	case []int:
-		e.Ints(key, v)
-	case int64:
-		e.Int64(key, v)
-	case []int64:
-		e.Ints64(key, v)
-	case float64:
-		e.Float64(key, v)
-	case []float64:
-		e.Floats64(key, v)
-	case bool:
-		e.Bool(key, v)
-	case []bool:
-		e.Bools(key, v)
-	case time.Duration:
-		e.Dur(key, v)
-	case []time.Duration:
-		e.Durs(key, v)
-	default:
-		e.Interface(key, v)
-	}
-
-	return e
+//nolint:zerologlint // returning zerolog Event for chaining
+func ErrLog() *zerolog.Event {
+	return errLogger.Log()
 }
 
-// --- Logging functions ---
-
-func Trace(msg string, fields ...any) {
-	addFields(outLogger.Trace(), fields...).Msg(msg)
+//nolint:zerologlint // returning zerolog Event for chaining
+func Trace() *zerolog.Event {
+	return outLogger.Trace()
 }
 
-func Debug(msg string, fields ...any) {
-	addFields(outLogger.Debug(), fields...).Msg(msg)
+//nolint:zerologlint // returning zerolog Event for chaining
+func Debug() *zerolog.Event {
+	return outLogger.Debug()
 }
 
-func Info(msg string, fields ...any) {
-	addFields(outLogger.Info(), fields...).Msg(msg)
+//nolint:zerologlint // returning zerolog Event for chaining
+func Info() *zerolog.Event {
+	return outLogger.Info()
 }
 
-func Warn(msg string, fields ...any) {
-	addFields(errLogger.Warn(), fields...).Msg(msg)
+//nolint:zerologlint // returning zerolog Event for chaining
+func Warn() *zerolog.Event {
+	return outLogger.Warn()
 }
 
-func Error(msg string, fields ...any) {
-	addFields(errLogger.Error().Stack(), fields...).Msg(msg)
+//nolint:zerologlint // returning zerolog Event for chaining
+func Error() *zerolog.Event {
+	return outLogger.Error().Stack()
 }
 
-func Fatal(msg string, fields ...any) {
-	addFields(errLogger.Fatal().Stack(), fields...).Msg(msg)
+//nolint:zerologlint // returning zerolog Event for chaining
+func Fatal() *zerolog.Event {
+	return errLogger.Fatal().Stack()
 }
 
-func Panic(msg string, fields ...any) {
-	addFields(errLogger.Panic().Stack(), fields...).Msg(msg)
+//nolint:zerologlint // returning zerolog Event for chaining
+func Panic() *zerolog.Event {
+	return errLogger.Panic().Stack()
 }
