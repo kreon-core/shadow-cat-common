@@ -43,6 +43,7 @@ func NewConnection(ctx context.Context, cfg *Config) (*pgxpool.Pool, error) {
 
 	err = pool.Ping(ctx)
 	if err != nil {
+		pool.Close()
 		return nil, fmt.Errorf("ping_database -> %w", err)
 	}
 
