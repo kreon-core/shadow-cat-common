@@ -1,3 +1,5 @@
+MODULE = github.com/kreon-core/shadow-cat-common
+
 .PHONY: dev-setup
 dev-setup:
 	go install github.com/go-delve/delve/cmd/dlv@latest							# for debugging
@@ -8,7 +10,7 @@ dev-setup:
 	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest	# for linting and formatting
 
 .PHONY: pre-commit
-pre-commit: install generate format lint clean
+pre-commit: install generate format lint tidy
 
 # ============================================================================================================
 
@@ -29,21 +31,23 @@ format:
 	gofumpt -l -w -extra .
 	goimports -w .
 	gci write \
-		--custom-order -s standard -s default -s "prefix(github.com/kreon-core/shadow-cat-common)" -s blank \
+		--custom-order -s standard -s default -s "prefix($(MODULE))" -s blank \
 		--no-lex-order --skip-generated --skip-vendor .
 	golines -w -m 120 .
 
 .PHONY: build
 build: generate
+	go build -o build/app .
 
 .PHONY: dev
 dev: build
-	go run .
+	./build/app -dev
+
+.PHONY: tidy
+tidy:
+	go mod tidy
 
 .PHONY: clean
 clean:
-	go mod tidy
-	go mod verify
-	go mod edit -fmt
-	go clean
-	rm -rf build/
+	go clean -cache -testcache -modcache
+	rm -rf build
