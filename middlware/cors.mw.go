@@ -8,6 +8,8 @@ import (
 	tul "github.com/kreon-core/shadow-cat-common"
 )
 
+const maxAge = 300
+
 type CORSConfig struct {
 	AllowedOrigins   *[]string
 	AllowedMethods   *[]string
@@ -31,6 +33,6 @@ func CORS(cfg *CORSConfig) func(next http.Handler) http.Handler {
 		}),
 		ExposedHeaders:   tul.OrElse(cfg.ExposedHeaders, []string{"Content-Length"}),
 		AllowCredentials: tul.OrElse(cfg.AllowCredentials, false),
-		MaxAge:           tul.OrElse(cfg.MaxAge, 300),
+		MaxAge:           tul.OrElse(cfg.MaxAge, maxAge),
 	})
 }
