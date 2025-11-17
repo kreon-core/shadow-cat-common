@@ -12,14 +12,14 @@ import (
 )
 
 const (
-	maxConns        = 10
-	minConns        = 1
-	minIdleConns    = 3
-	maxConnIdleTime = 300 * time.Second
-	maxConnLifetime = 3600 * time.Second
+	maxConns        int32 = 10
+	minConns        int32 = 1
+	minIdleConns    int32 = 3
+	maxConnIdleTime       = 300 * time.Second
+	maxConnLifetime       = 3600 * time.Second
 )
 
-func CreateConnection(ctx context.Context, cfg *Config) (*pgxpool.Pool, error) {
+func NewConnection(ctx context.Context, cfg *Config) (*pgxpool.Pool, error) {
 	dsn := cfg.DSN
 	if tul.IsBlank(dsn) {
 		return nil, errors.New("empty dsn string")
@@ -30,9 +30,9 @@ func CreateConnection(ctx context.Context, cfg *Config) (*pgxpool.Pool, error) {
 		return nil, fmt.Errorf("parse_dsn -> %w", err)
 	}
 
-	pgCfg.MaxConns = int32(tul.OrElse(cfg.MaxConns, int(maxConns)))
-	pgCfg.MinConns = int32(tul.OrElse(cfg.MinConns, int(minConns)))
-	pgCfg.MinIdleConns = int32(tul.OrElse(cfg.MinIdleConns, int(minIdleConns)))
+	pgCfg.MaxConns = tul.OrElse(cfg.MaxConns, maxConns)
+	pgCfg.MinConns = tul.OrElse(cfg.MinConns, minConns)
+	pgCfg.MinIdleConns = tul.OrElse(cfg.MinIdleConns, minIdleConns)
 	pgCfg.MaxConnIdleTime = tul.OrElse(cfg.MaxConnIdleTime, maxConnIdleTime)
 	pgCfg.MaxConnLifetime = tul.OrElse(cfg.MaxConnLifetime, maxConnLifetime)
 
