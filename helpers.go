@@ -76,10 +76,10 @@ func ZeroOf(obj any) any {
 	return reflect.Zero(reflect.TypeOf(obj)).Interface()
 }
 
-func OrElse[T any](obj, defaultVal T) T {
-	if IsEmpty(obj) {
+func OrElse[T any](obj *T, defaultVal T) T {
+	if obj == nil || IsEmpty(*obj) {
 		return defaultVal
 	}
 
-	return obj
+	return *obj
 }
