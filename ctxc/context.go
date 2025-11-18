@@ -2,7 +2,7 @@ package ctxc
 
 import "context"
 
-func GetFromContext[T any](ctx context.Context, key string) (T, bool) {
+func GetFromContext[T any](ctx context.Context, key any) (T, bool) {
 	var zero T
 
 	val := ctx.Value(key)
