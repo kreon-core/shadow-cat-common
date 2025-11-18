@@ -1,9 +1,8 @@
-package tul
+package ultc
 
 import (
 	"reflect"
 	"slices"
-	"unicode"
 )
 
 var numericZeros = []any{ //nolint:gochecknoglobals // common utility
@@ -38,22 +37,14 @@ func IsEmpty(obj any) bool {
 	case reflect.Slice, reflect.Array:
 		return objValue.Len() == 0
 	case reflect.Struct:
-		return reflect.DeepEqual(obj, ZeroOf(obj))
+		// Use objValue.IsZero() for efficient struct zero-value check.
+		// Prefer IsEmpty for generic "empty" checks; use IsZero for strict zero-value checks.
+		return objValue.IsZero()
 	case reflect.Pointer:
 		return objValue.IsNil()
 	}
 
 	return false
-}
-
-func IsBlank(s string) bool {
-	for _, c := range s {
-		if !unicode.IsSpace(c) {
-			return false
-		}
-	}
-
-	return true
 }
 
 func IsZero(obj any) bool {
@@ -77,7 +68,11 @@ func ZeroOf(obj any) any {
 }
 
 func OrElse[T any](obj *T, defaultVal T) T {
-	if obj == nil || IsEmpty(*obj) {
+	if obj == nil {
+		return defaultVal
+	}
+
+	if IsEmpty(*obj) {
 		return defaultVal
 	}
 

@@ -1,4 +1,4 @@
-package tul
+package dbc
 
 import (
 	"context"
@@ -8,6 +8,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/kreon-core/shadow-cat-common/ultc"
 )
 
 type PostgresConfig struct {
@@ -29,8 +31,10 @@ const (
 
 func NewPostgresConnection(ctx context.Context, cfg *PostgresConfig) (*pgxpool.Pool, error) {
 	dsn := cfg.DSN
-	if IsBlank(dsn) {
-		return nil, errors.New("empty dsn string")
+	if ultc.IsBlank(dsn) {
+		return nil, errors.New(
+			"DSN is blank: PostgresConfig.DSN is required but was empty",
+		)
 	}
 
 	pgCfg, err := pgxpool.ParseConfig(dsn)
@@ -38,11 +42,11 @@ func NewPostgresConnection(ctx context.Context, cfg *PostgresConfig) (*pgxpool.P
 		return nil, fmt.Errorf("parse_dsn -> %w", err)
 	}
 
-	pgCfg.MaxConns = OrElse(cfg.MaxConns, maxConns)
-	pgCfg.MinConns = OrElse(cfg.MinConns, minConns)
-	pgCfg.MinIdleConns = OrElse(cfg.MinIdleConns, minIdleConns)
-	pgCfg.MaxConnIdleTime = OrElse(cfg.MaxConnIdleTime, maxConnIdleTime)
-	pgCfg.MaxConnLifetime = OrElse(cfg.MaxConnLifetime, maxConnLifetime)
+	pgCfg.MaxConns = ultc.OrElse(cfg.MaxConns, maxConns)
+	pgCfg.MinConns = ultc.OrElse(cfg.MinConns, minConns)
+	pgCfg.MinIdleConns = ultc.OrElse(cfg.MinIdleConns, minIdleConns)
+	pgCfg.MaxConnIdleTime = ultc.OrElse(cfg.MaxConnIdleTime, maxConnIdleTime)
+	pgCfg.MaxConnLifetime = ultc.OrElse(cfg.MaxConnLifetime, maxConnLifetime)
 
 	pool, err := pgxpool.NewWithConfig(ctx, pgCfg)
 	if err != nil {
@@ -58,8 +62,8 @@ func NewPostgresConnection(ctx context.Context, cfg *PostgresConfig) (*pgxpool.P
 	return pool, nil
 }
 
-func ParseUUID(str string) (pgtype.UUID, error) {
+func ParseUUID(uuidStr string) (pgtype.UUID, error) {
 	var uuid pgtype.UUID
-	err := uuid.Scan(str)
+	err := uuid.Scan(uuidStr)
 	return uuid, err
 }

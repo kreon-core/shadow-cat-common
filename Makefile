@@ -10,7 +10,7 @@ dev-setup:
 	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest	# for linting and formatting
 
 .PHONY: pre-commit
-pre-commit: install generate format lint tidy
+pre-commit: install generate format lint clean
 
 # ============================================================================================================
 
@@ -35,19 +35,8 @@ format:
 		--no-lex-order --skip-generated --skip-vendor .
 	golines -w -m 120 .
 
-.PHONY: build
-build: generate
-	go build -o build/app .
-
-.PHONY: dev
-dev: build
-	./build/app -dev
-
-.PHONY: tidy
-tidy:
-	go mod tidy
-
 .PHONY: clean
 clean:
-	go clean -cache -testcache -modcache
+	go clean
+	go mod tidy
 	rm -rf build
