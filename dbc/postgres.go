@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/kreon-core/shadow-cat-common/ultc"
+	"github.com/kreon-core/shadow-cat-common/utlc"
 )
 
 type PostgresConfig struct {
@@ -31,7 +31,7 @@ const (
 
 func NewPostgresConnection(ctx context.Context, cfg *PostgresConfig) (*pgxpool.Pool, error) {
 	dsn := cfg.DSN
-	if ultc.IsBlank(dsn) {
+	if utlc.IsBlank(dsn) {
 		return nil, errors.New(
 			"DSN is blank: PostgresConfig.DSN is required but was empty",
 		)
@@ -42,11 +42,11 @@ func NewPostgresConnection(ctx context.Context, cfg *PostgresConfig) (*pgxpool.P
 		return nil, fmt.Errorf("parse_dsn -> %w", err)
 	}
 
-	pgCfg.MaxConns = ultc.OrElse(cfg.MaxConns, maxConns)
-	pgCfg.MinConns = ultc.OrElse(cfg.MinConns, minConns)
-	pgCfg.MinIdleConns = ultc.OrElse(cfg.MinIdleConns, minIdleConns)
-	pgCfg.MaxConnIdleTime = ultc.OrElse(cfg.MaxConnIdleTime, maxConnIdleTime)
-	pgCfg.MaxConnLifetime = ultc.OrElse(cfg.MaxConnLifetime, maxConnLifetime)
+	pgCfg.MaxConns = utlc.OrElse(cfg.MaxConns, maxConns)
+	pgCfg.MinConns = utlc.OrElse(cfg.MinConns, minConns)
+	pgCfg.MinIdleConns = utlc.OrElse(cfg.MinIdleConns, minIdleConns)
+	pgCfg.MaxConnIdleTime = utlc.OrElse(cfg.MaxConnIdleTime, maxConnIdleTime)
+	pgCfg.MaxConnLifetime = utlc.OrElse(cfg.MaxConnLifetime, maxConnLifetime)
 
 	pool, err := pgxpool.NewWithConfig(ctx, pgCfg)
 	if err != nil {

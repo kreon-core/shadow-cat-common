@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-chi/cors"
 
-	"github.com/kreon-core/shadow-cat-common/ultc"
+	"github.com/kreon-core/shadow-cat-common/utlc"
 )
 
 const maxAge = 300
@@ -24,9 +24,9 @@ func CORS(cfg *CORSConfig) func(next http.Handler) http.Handler {
 		cfg = &CORSConfig{}
 	}
 	return cors.Handler(cors.Options{
-		AllowedOrigins: ultc.OrElse(cfg.AllowedOrigins, []string{"https://*", "http://*"}),
-		AllowedMethods: ultc.OrElse(cfg.AllowedMethods, []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}),
-		AllowedHeaders: ultc.OrElse(cfg.AllowedHeaders, []string{
+		AllowedOrigins: utlc.OrElse(cfg.AllowedOrigins, []string{"https://*", "http://*"}),
+		AllowedMethods: utlc.OrElse(cfg.AllowedMethods, []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}),
+		AllowedHeaders: utlc.OrElse(cfg.AllowedHeaders, []string{
 			"Origin",
 			"Accept",
 			"Content-Type",
@@ -34,8 +34,8 @@ func CORS(cfg *CORSConfig) func(next http.Handler) http.Handler {
 			"X-Real-IP",
 			"X-Request-ID",
 		}),
-		ExposedHeaders:   ultc.OrElse(cfg.ExposedHeaders, []string{"Content-Length"}),
-		AllowCredentials: ultc.OrElse(cfg.AllowCredentials, false),
-		MaxAge:           ultc.OrElse(cfg.MaxAge, maxAge),
+		ExposedHeaders:   utlc.OrElse(cfg.ExposedHeaders, []string{"Content-Length"}),
+		AllowCredentials: utlc.OrElse(cfg.AllowCredentials, false),
+		MaxAge:           utlc.OrElse(cfg.MaxAge, maxAge),
 	})
 }
