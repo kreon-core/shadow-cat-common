@@ -13,12 +13,12 @@ import (
 )
 
 type PostgresConfig struct {
-	DSN             string         `mapstructure:"dsn"                validate:"required"`
-	MaxConns        *int32         `mapstructure:"max_conns"          validate:"omitempty,gte=0"`
-	MinConns        *int32         `mapstructure:"min_conns"          validate:"omitempty,gte=0,ltefield=MaxConns"`
-	MinIdleConns    *int32         `mapstructure:"min_idle_conns"     validate:"omitempty,gte=0,ltefield=MaxConns"`
-	MaxConnIdleTime *time.Duration `mapstructure:"max_conn_idle_time" validate:"omitempty,gte=0"`
-	MaxConnLifetime *time.Duration `mapstructure:"max_conn_lifetime"  validate:"omitempty,gte=0"`
+	DSN             string         `mapstructure:"dsn"                json:"dsn"                validate:"required"`
+	MaxConns        *int32         `mapstructure:"max_conns"          json:"max_conns"          validate:"omitempty,gte=0"`
+	MinConns        *int32         `mapstructure:"min_conns"          json:"min_conns"          validate:"omitempty,gte=0,ltefield=MaxConns"`
+	MinIdleConns    *int32         `mapstructure:"min_idle_conns"     json:"min_idle_conns"     validate:"omitempty,gte=0,ltefield=MaxConns"`
+	MaxConnIdleTime *time.Duration `mapstructure:"max_conn_idle_time" json:"max_conn_idle_time" validate:"omitempty,gte=0"`
+	MaxConnLifetime *time.Duration `mapstructure:"max_conn_lifetime"  json:"max_conn_lifetime"  validate:"omitempty,gte=0"`
 }
 
 const (
