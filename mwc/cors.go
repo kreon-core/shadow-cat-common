@@ -12,6 +12,7 @@ const maxAge = 300
 
 type CORSConfig struct {
 	AllowedOrigins   *[]string
+	AllowOriginFunc  *func(r *http.Request, origin string) bool
 	AllowedMethods   *[]string
 	AllowedHeaders   *[]string
 	ExposedHeaders   *[]string
@@ -23,8 +24,8 @@ func CORS(cfg *CORSConfig) func(next http.Handler) http.Handler {
 	if cfg == nil {
 		cfg = &CORSConfig{}
 	}
-	return cors.Handler(cors.Options{
-		AllowedOrigins: utlc.OrElse(cfg.AllowedOrigins, []string{"https://*", "http://*"}),
+
+	corsOptions := &cors.Options{
 		AllowedMethods: utlc.OrElse(cfg.AllowedMethods, []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}),
 		AllowedHeaders: utlc.OrElse(cfg.AllowedHeaders, []string{
 			"Origin",
@@ -37,5 +38,13 @@ func CORS(cfg *CORSConfig) func(next http.Handler) http.Handler {
 		ExposedHeaders:   utlc.OrElse(cfg.ExposedHeaders, []string{"Content-Length"}),
 		AllowCredentials: utlc.OrElse(cfg.AllowCredentials, false),
 		MaxAge:           utlc.OrElse(cfg.MaxAge, maxAge),
-	})
+	}
+
+	if cfg.AllowOriginFunc != nil {
+		corsOptions.AllowOriginFunc = *cfg.AllowOriginFunc
+	} else {
+		corsOptions.AllowedOrigins = utlc.OrElse(cfg.AllowedOrigins, []string{"https://*", "http://*"})
+	}
+
+	return cors.Handler(*corsOptions)
 }
